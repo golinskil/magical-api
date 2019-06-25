@@ -4,22 +4,23 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
-import pl.inaczej.net.lukaszgolinski.magicalapi.service.HoroscopeService;
+import pl.inaczej.net.lukaszgolinski.magicalapi.service.ApiService;
 import reactor.core.publisher.Mono;
 
 @Component
 @Slf4j
 public class HoroscopeHandler {
 
-    private final HoroscopeService horoscopeService;
+    private final ApiService apiService;
 
-    public HoroscopeHandler(HoroscopeService horoscopeService) {
-        this.horoscopeService = horoscopeService;
+    public HoroscopeHandler(ApiService apiService) {
+        this.apiService = apiService;
     }
+
 
     public Mono<ServerResponse> testModel(ServerRequest req) {
 
-        return horoscopeService.getHoroscope(req.pathVariable("zodiac"))
+        return apiService.getDefaultHoroscope(req.pathVariable("zodiac"))
                 .flatMap(s -> ServerResponse.ok()
                         .syncBody(s))
                 .doOnError(err -> System.out.print("--------------------->dupa"))

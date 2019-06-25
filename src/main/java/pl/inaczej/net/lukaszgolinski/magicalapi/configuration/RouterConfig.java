@@ -7,6 +7,7 @@ import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.RouterFunctions;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import pl.inaczej.net.lukaszgolinski.magicalapi.handlers.HoroscopeHandler;
+import pl.inaczej.net.lukaszgolinski.magicalapi.handlers.ServicesHandler;
 
 import java.net.URI;
 
@@ -23,9 +24,10 @@ public class RouterConfig {
     }
 
     @Bean
-    public RouterFunction<ServerResponse> route(HoroscopeHandler horoscopeHandler) {
+    public RouterFunction<ServerResponse> route(ServicesHandler servicesHandler, HoroscopeHandler horoscopeHandler) {
         return RouterFunctions
                 .route(GET("/"), req -> ServerResponse.temporaryRedirect(URI.create(propertiesConfig.getHomepageUrl())).build())
+                .andRoute(GET("/services"), servicesHandler::listServices)
                 .andRoute(GET("/horoscope/{zodiac}").and(accept(MediaType.APPLICATION_JSON)), horoscopeHandler::testModel)
                 ;
     }
